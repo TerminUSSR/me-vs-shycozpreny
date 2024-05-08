@@ -114,8 +114,22 @@ void print(T field[], T field2[]) {
 		cout << endl;
 	}
 }
-void THEGAME(char f, char f2) {
-
+template <typename T>
+void THEGAME(T f[], T f2[]) {
+	int x=0, d, c;
+	cout << " '-' -- пустота\n '=' -- ранил\n '%' -- убил\n '#'-мимо\n Приступай!\n";
+	do {
+		print(f, f2);
+		cout << "Смотри какой живучий бот. Пальни по нему, зачем он такой.\n";
+		cin >> d >> c;
+		d--; c--;
+		if (f2[d][c] == 0)
+			f2[d][c] = 4;
+		else if (f2[d][c] == 1) {
+			f2[d][c] = 2;
+			x++;
+		}
+	} while (x < 20);
 }
 template <typename T>
 void fill(T a[], bool comp, T f[]) {
@@ -145,7 +159,7 @@ int main() {
 	setlocale(LC_ALL, "rus");
 	srand(time(0));
 	char field[10][10]{}, field2[10][10]{};
-	fill(field, 0, field2);
+	fill(field, 1, field2);
 	fill(field2, 1, field2);
 	THEGAME(field, field2);
 	return 0;
