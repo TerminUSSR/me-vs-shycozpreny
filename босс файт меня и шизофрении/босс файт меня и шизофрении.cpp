@@ -70,9 +70,20 @@ bool hysteria(int a, int b, T k, int c, int size) {
 	}
 	return true;
 }
+#define а 0
+#define б 1
+#define в 2
+#define г 3
+#define д 4
+#define е 5
+#define ё 6
+#define ж 7
+#define з 8
+#define и 9
+#define к 10
 template <typename T>
 void print(T field[], T field2[]) {
-	cout << "\tа б в г д е ё ж з и \t \t а б в г д е ё ж з и\n";
+	cout << "\t1 2 3 4 5 6 7 8 9 10 \t \t 1 2 3 4 5 6 7 8 9 10\n";
 	for (int i = 0; i < 10; i++) {
 		cout << i + 1 << '\t';
 		for (int j = 0; j < 10; j++) {
@@ -103,12 +114,29 @@ void print(T field[], T field2[]) {
 		cout << endl;
 	}
 }
+void THEGAME(char f, char f2) {
+
+}
 template <typename T>
-void fill(T a[], bool comp) {
+void fill(T a[], bool comp, T f[]) {
 	if (comp) {
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < i + 1; j++) {
 				while (hysteria(rand() % 10, rand() % 10, a, rand() % 4, 4 - i) == false) {}
+			}
+		}
+	}
+	else {
+		int d, c, b;
+		cout << "(1-ое значение координат должно быть цифрой,второе тоже (там где А это 10, я просто двухзначное не хочу ) Стороны: 0-вправо, 1-влево, 2-вниз, 3-вверх.)\n";
+		for (int i = 0; i < 4; i++) {
+			cout << "введите координату головы (через пробел) и направление для " << 4 - i << "-палубных кораблей в количестве " << i+1 << " штук.\n";
+			for (int j = 0; j < i + 1; j++) {
+				cin >> d >> c >> b;
+				if (hysteria(d-1, c-1, a, b, 4 - i) == false) {
+					cout << "Ошибка. Судя по всему вы не шибко умный человек. Убедительная просьба вписать верное значение\n"; j--;
+				}
+				print(a, f);
 			}
 		}
 	}
@@ -117,7 +145,8 @@ int main() {
 	setlocale(LC_ALL, "rus");
 	srand(time(0));
 	char field[10][10]{}, field2[10][10]{};
-	fill(field, 1);
-	print(field, field2);
+	fill(field, 0, field2);
+	fill(field2, 1, field2);
+	THEGAME(field, field2);
 	return 0;
 }
