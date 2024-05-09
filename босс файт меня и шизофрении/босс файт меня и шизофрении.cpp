@@ -70,17 +70,6 @@ bool hysteria(int a, int b, T k, int c, int size) {
 	}
 	return true;
 }
-#define а 0
-#define б 1
-#define в 2
-#define г 3
-#define д 4
-#define е 5
-#define ё 6
-#define ж 7
-#define з 8
-#define и 9
-#define к 10
 template <typename T>
 void print(T field[], T field2[]) {
 	cout << "\t1 2 3 4 5 6 7 8 9 10 \t \t 1 2 3 4 5 6 7 8 9 10\n";
@@ -91,7 +80,7 @@ void print(T field[], T field2[]) {
 				cout << '-';
 			else if (field[i][j] == 1)
 				cout << '+';
-			else if (field[i][j] == 2)
+			else if (field[i][j] == 2 || field[i][j] == 5 || field[i][j] == 6 || field[i][j] == 7 || field[i][j] == 8 || field[i][j] == 9)
 				cout << '=';
 			else if (field[i][j] == 3)
 				cout << '%';
@@ -114,6 +103,108 @@ void print(T field[], T field2[]) {
 		cout << endl;
 	}
 }
+//template <typename T>
+//void tofind(T a[], int d, int c) {
+//	if (a[d - 1][c] == 2) {
+//		a[d - 1][c] = 3;
+//		for (int i = 2; i < 3; i++) {
+//			if (a[d - i][c] == 2) {
+//				a[d - i][c] == 3;
+//			}
+//			else
+//				break;
+//		}
+//		a[d][c] == 3;
+//	}
+//	else if (a[d + 1][c] == 2) {
+//		a[d + 1][c] = 3;
+//			for (int i = 2; i < 3; i++) {
+//				if (a[d + i][c] == 2) {
+//					a[d + i][c] == 3;
+//				}
+//				else
+//					break;
+//			}
+//		a[d][c] == 3;
+//	}
+//	else if (a[d][c - 1] == 2) {
+//		a[d][c - 1] = 3;
+//			for (int i = 2; i < 3; i++) {
+//				if (a[d][c - i] == 2) {
+//					a[d][c - i] == 3;
+//				}
+//				else
+//					break;
+//			}
+//		a[d][c] == 3;
+//	}
+//	else if (a[d][c + 1] == 2) {
+//		a[d][c + 1] = 3;
+//			for (int i = 2; i < 4; i++) {
+//				if (a[d][c + i] == 2) {
+//					a[d][c + i] == 3;
+//				}
+//				else
+//					break;
+//			}
+//		a[d][c] == 3;
+//	}
+//	else
+//		a[d][c] = 2;
+//}
+template <typename T>
+void AI(T a[]) {
+	int b, c;
+	bool x = false;
+	for (int i = 0; i < 10; i++) {
+		for (int j = 0; j < 10; j++) {
+			if (a[i][j] == 2) {
+				x = true;
+				if (a[i + 1][j] == 0 || a[i + 1][j] == 1){
+					if (a[i + 1][j] == 1){
+						a[i + 1][j] == 6;
+						a[i][j] == 9;
+					}
+					else
+						a[i + 1][j] == 4;
+			    }
+				else if (a[i - 1][j] == 0 || a[i - 1][j] == 1) {
+					if (a[i - 1][j] == 1){
+						a[i - 1][j] == 6;
+						a[i][j] == 9;
+					}
+					else
+						a[i - 1][j] == 4;
+				}
+				else if (a[i][j + 1] == 0 || a[i][j + 1] == 1) {
+					if (a[i][j + 1] == 1){
+						a[i][j + 1] == 7;
+					    a[i][j] == 9;
+				    }
+					else
+						a[i][j + 1] == 4;
+				}
+				else if (a[i][j - 1] == 0 || a[i][j - 1] == 1) {
+					if (a[i][j - 1] == 1) {
+						a[i][j - 1] == 8;
+						a[i][j] == 9;
+					}
+					else
+						a[i][j - 1] == 4;
+				}
+			}
+		}
+	}
+	if (x == false) {
+		do {
+			b = rand() % 10, c = rand() % 10;
+		} while (a[b][c] != 0 || a[b][c] != 1);
+		if (a[b][c] == 0)
+			a[b][c] == 4;
+		else
+			a[b][c] == 2;
+	}
+}
 template <typename T>
 void THEGAME(T f[], T f2[]) {
 	int x=0, d, c;
@@ -129,6 +220,9 @@ void THEGAME(T f[], T f2[]) {
 			f2[d][c] = 2;
 			x++;
 		}
+		else
+			cout << "мда.\n";
+		AI(f);
 	} while (x < 20);
 }
 template <typename T>
@@ -142,7 +236,7 @@ void fill(T a[], bool comp, T f[]) {
 	}
 	else {
 		int d, c, b;
-		cout << "(1-ое значение координат должно быть цифрой,второе тоже (там где А это 10, я просто двухзначное не хочу ) Стороны: 0-вправо, 1-влево, 2-вниз, 3-вверх.)\n";
+		cout << "(1-ое значение координат должно быть цифрой, второе тоже. Стороны: 0-вправо, 1-влево, 2-вниз, 3-вверх.)\n";
 		for (int i = 0; i < 4; i++) {
 			cout << "введите координату головы (через пробел) и направление для " << 4 - i << "-палубных кораблей в количестве " << i+1 << " штук.\n";
 			for (int j = 0; j < i + 1; j++) {
@@ -160,7 +254,7 @@ int main() {
 	srand(time(0));
 	char field[10][10]{}, field2[10][10]{};
 	fill(field, 1, field2);
-	fill(field2, 1, field2);
+	fill(field2, 1, field);
 	THEGAME(field, field2);
 	return 0;
 }
