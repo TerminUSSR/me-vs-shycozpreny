@@ -3,15 +3,12 @@
 using std::cout;
 using std::cin;
 using std::endl;
-
 enum status {
     empty, ship, dead, miss, temp, shot, hDown, hLeft, hUp, hRight
 };
 enum direction {
     right, left, down, up
 };
-
-
 template <typename T>
 bool hysteria(int a, int b, T k, int c, int size) {
     int f = a; int d = b;
@@ -92,7 +89,7 @@ void print(T field[], T field2[]) {
                 cout << '-';
             else if (field[i][j] == ship)
                 cout << '+';
-            else if (field[i][j] == shot || field[i][j] == temp || field[i][j] == 6 || field[i][j] == 7 || field[i][j] == 8 || field[i][j] == 9)
+            else if (field[i][j] == shot || field[i][j] == hDown || field[i][j] == hUp || field[i][j] == hLeft || field[i][j] == hRight)
                 cout << '=';
             else if (field[i][j] == dead)
                 cout << '%';
@@ -123,55 +120,109 @@ void print(T field[], T field2[]) {
         cout << endl;
     }
 }
-//template <typename T>
-//void tofind(T a[], int d, int c) {
-//  if (a[d - 1][c] == 2) {
-//    a[d - 1][c] = 3;
-//    for (int i = 2; i < 3; i++) {
-//      if (a[d - i][c] == 2) {
-//        a[d - i][c] == 3;
-//      }
-//      else
-//        break;
-//    }
-//    a[d][c] == 3;
-//  }
-//  else if (a[d + 1][c] == 2) {
-//    a[d + 1][c] = 3;
-//      for (int i = 2; i < 3; i++) {
-//        if (a[d + i][c] == 2) {
-//          a[d + i][c] == 3;
-//        }
-//        else
-//          break;
-//      }
-//    a[d][c] == 3;
-//  }
-//  else if (a[d][c - 1] == 2) {
-//    a[d][c - 1] = 3;
-//      for (int i = 2; i < 3; i++) {
-//        if (a[d][c - i] == 2) {
-//          a[d][c - i] == 3;
-//        }
-//        else
-//          break;
-//      }
-//    a[d][c] == 3;
-//  }
-//  else if (a[d][c + 1] == 2) {
-//    a[d][c + 1] = 3;
-//      for (int i = 2; i < 4; i++) {
-//        if (a[d][c + i] == 2) {
-//          a[d][c + i] == 3;
-//        }
-//        else
-//          break;
-//      }
-//    a[d][c] == 3;
-//  }
-//  else
-//    a[d][c] = 2;
-//}
+template <typename T>
+void check(T a[], int& x, int& y) {
+    int x1=x, x2=x;
+    while ((x1+1 <= 9) && (a[x1 + 1][y] == shot)) {        
+        x1++;
+    }
+    if (x1 + 1 <= 9 && a[x1 + 1][y] == ship) {
+        return;
+    }
+    while ((x2 - 1 >= 0) && (a[x2 - 1][y] == shot)) {
+        x2--;
+    }
+    if (x2 - 1 >= 0 && a[x2 - 1][y] == ship) {
+        return; //👍👍👍👍
+    }
+    if (x1 != x2) {
+        if (x1 + 1 <= 9) {
+            a[x1 + 1][y] == miss;
+            if (y + 1 <= 9)
+                a[x1 + 1][y + 1] = miss;
+            if (y - 1 >= 0)
+                a[x1 + 1][y - 1] = miss;
+        }
+        if (x2 - 1 >= 0) {
+            a[x2 - 1][y] == miss;
+            if (y + 1 <= 9)
+                a[x2 - 1][y + 1] = miss;
+            if (y - 1 >= 0)
+                a[x2 - 1][y - 1] = miss;
+        }
+        for (int i = x2; i < x1; i++) {
+            a[i][y] = dead;
+            if(y+1<=9)
+                a[i][y + 1] = miss;
+            if(y-1>=0)
+                a[i][y - 1] = miss;
+        }
+        x = -1; y = -1;
+        return;
+    }
+    if (a[x][y - 1] != ship && a[x][y - 1] != shot && a[x][y + 1] != ship && a[x][y + 1] != shot) {
+        a[x][y] = dead;
+        if (x - 1 >= 0) {
+            a[x - 1][y] == miss;
+            if (y + 1 <= 9) {
+                a[x - 1][y + 1] = miss;
+                a[x][y + 1] = miss;
+                }
+            if (y - 1 >= 0) {
+                a[x - 1][y - 1] = miss;
+                a[x][y - 1] == miss;
+            }
+        }
+        if (x + 1 <= 9) {
+            a[x + 1][y] == miss;
+            if (y + 1 <= 9) {
+                a[x + 1][y + 1] = miss;
+                a[x][y + 1] == miss;
+            }
+            if (y - 1 >= 0){
+                a[x + 1][y - 1] = miss;
+                a[x][y - 1] == miss;
+            }
+        }
+        x = -1; y = -1; return;
+    }
+    int y1 = y, y2 = y;
+    while ((y1 + 1 <= 9) && (a[x][y1 + 1] == shot)) {
+        y1++;
+    }
+    if (y1 + 1 <= 9 && a[x][y1 + 1] == ship) {
+        return;
+    }
+    while ((y2 - 1 >= 0) && (a[x][y2 - 1] == shot)) {
+        y2--;
+    }
+    if (y2 - 1 >= 0 && a[x][y2 - 1] == ship) {
+        return;
+    }
+    if (y1 + 1 <= 9) {
+        a[x][y1 + 1] == miss;
+        if (x + 1 <= 9)
+            a[x + 1][y1 + 1] = miss;
+        if (x - 1 >= 0)
+            a[x - 1][y1 + 1] = miss;
+    }
+    if (y2 - 1 >= 0) {
+        a[x][y2 - 1] == miss;
+        if (x + 1 <= 9)
+            a[x + 1][y2 - 1] = miss;
+        if (y - 1 >= 0)
+            a[x - 1][y2 - 1] = miss;
+    }
+    for (int i = y2; i < y1; i++) {
+        a[x][i] = dead;
+        if (x + 1 <= 9)
+            a[x + 1][i] = miss;
+        if (x - 1 >= 0)
+            a[x - 1][i] = miss;
+    }
+    x = -1; y = -1;
+    return;
+}
 template <typename T>
 void AI(T a[]) {
     static int i = -1, j = -1;
@@ -184,6 +235,7 @@ void AI(T a[]) {
                 else if (a[i + 1][j] == ship) {
                     a[i + 1][j] = shot;
                     a[i][j] = hDown;
+                    check(a, i, j);
                     break;
                 }
                 else {
@@ -191,7 +243,7 @@ void AI(T a[]) {
                     a[i][j] = hLeft;
                     break;
                 }
-            }//empty, ship, dead, miss, temp, shot, hDown
+            }
             else if (a[i][j] == hDown) {
                 int x = i + 1, y = j;
                 bool flag = false;
@@ -204,7 +256,12 @@ void AI(T a[]) {
                     }
                 }
                 if (!flag) {
-                    (a[x][y] == empty) ? a[x][y] = miss : a[x][y] = shot;
+                    if (a[x][y] == empty)
+                        a[x][y] = miss;
+                    else {
+                        a[x][y] = shot;
+                        check(a, i, j);
+                    }
                     break;
                 }
             }
@@ -224,7 +281,12 @@ void AI(T a[]) {
                         }
                     }
                     if (!flag) {
-                        (a[x][y] == empty) ? a[x][y] = miss : a[x][y] = shot;
+                        if (a[x][y] == empty)
+                            a[x][y] = miss;
+                        else {
+                            a[x][y] = shot;
+                            check(a, i, j);
+                        }
                         break;
                     }
                 }
@@ -235,25 +297,17 @@ void AI(T a[]) {
                     a[i][j] = hRight;
                 }
                 else {
-                    bool flag = false;
-                    while (a[x][y] == shot) {
-                        if (x > 0 && a[x - 1][y] != miss) x--;
-                        else {
-                            a[i][j] = hDown;
-                            flag = true;
-                            break;
-                        }
-                    }
-                    if (!flag) {
-                        (a[x][y] == empty) ? a[x][y] = miss : a[x][y] = shot;
-                        break;
-                    }
+                    while (a[x][y] == shot) { x--; }
+                    a[x][y] = shot;
+                    check(a, i, j);
+                    break;
                 }
             }
             else if (a[i][j] == hRight) {
                 int x = i, y = j + 1;
-                while (a[x][y++] == shot) {}
+                while (a[x][y] == shot) { y++; }
                 a[x][y] = shot;
+                check(a, i, j);
                 break;
             }
         }
@@ -268,28 +322,30 @@ void AI(T a[]) {
             a[b][c] = shot;
             i = b;
             j = c;
+            check(a, i, j);
         }
     }
     //проверка на dead
 }
 template <typename T>
 void THEGAME(T f[], T f2[]) {
-    int x = 0, d, c;
+    int x = 0, y = 0, d, c;
     cout << " '-' -- пустота\n '=' -- ранил\n '%' -- убил\n '#'-мимо\n Приступай!\n";
     do {
         print(f, f2);
         cout << "Смотри какой живучий бот. Пальни по нему, зачем он такой.\n";
         cin >> d >> c;
-        if (f2[--d][--c] == 0)
-            f2[d][c] = 4;
-        else if (f2[d][c] == 1) {
-            f2[d][c] = 2;
+        if (f2[--d][--c] == empty)
+            f2[d][c] = miss;
+        else if (f2[d][c] == ship) {
+            f2[d][c] = shot;
             x++;
+            check(f, d, c);
         }
         else
             cout << "мда.\n";
         AI(f);
-    } while (x < 20);
+    } while (x < 20 || y < 20);
 }
 template <typename T>
 void fill(T a[], bool comp, T f[]) {
