@@ -1,5 +1,5 @@
 ﻿#include <iostream>
-#define DEBUG
+#define DEBU
 using std::cout;
 using std::cin;
 using std::endl;
@@ -93,7 +93,7 @@ void print(T field[], T field2[]) {
                 cout << '=';
             else if (field[i][j] == dead)
                 cout << '%';
-            else
+            else if (field[i][j] == miss)
                 cout << '#';
             cout << ' ';
         }
@@ -121,7 +121,7 @@ void print(T field[], T field2[]) {
     }
 }
 template <typename T>
-void check(T a[], int& x, int& y) {
+void check(T a[], int& x, int& y, int& m) {
     int x1=x, x2=x;
     while ((x1+1 <= 9) && (a[x1 + 1][y] == shot)) {        
         x1++;
@@ -137,21 +137,22 @@ void check(T a[], int& x, int& y) {
     }
     if (x1 != x2) {
         if (x1 + 1 <= 9) {
-            a[x1 + 1][y] == miss;
+            a[x1 + 1][y] = miss;
             if (y + 1 <= 9)
                 a[x1 + 1][y + 1] = miss;
             if (y - 1 >= 0)
                 a[x1 + 1][y - 1] = miss;
         }
         if (x2 - 1 >= 0) {
-            a[x2 - 1][y] == miss;
+            a[x2 - 1][y] = miss;
             if (y + 1 <= 9)
                 a[x2 - 1][y + 1] = miss;
             if (y - 1 >= 0)
                 a[x2 - 1][y - 1] = miss;
         }
-        for (int i = x2; i < x1; i++) {
+        for (int i = x2; i <= x1; i++) {
             a[i][y] = dead;
+            m++;
             if(y+1<=9)
                 a[i][y + 1] = miss;
             if(y-1>=0)
@@ -161,27 +162,27 @@ void check(T a[], int& x, int& y) {
         return;
     }
     if (a[x][y - 1] != ship && a[x][y - 1] != shot && a[x][y + 1] != ship && a[x][y + 1] != shot) {
-        a[x][y] = dead;
+        a[x][y] = dead; m++;
         if (x - 1 >= 0) {
-            a[x - 1][y] == miss;
+            a[x - 1][y] = miss;
             if (y + 1 <= 9) {
                 a[x - 1][y + 1] = miss;
                 a[x][y + 1] = miss;
                 }
             if (y - 1 >= 0) {
                 a[x - 1][y - 1] = miss;
-                a[x][y - 1] == miss;
+                a[x][y - 1] = miss;
             }
         }
         if (x + 1 <= 9) {
-            a[x + 1][y] == miss;
+            a[x + 1][y] = miss;
             if (y + 1 <= 9) {
                 a[x + 1][y + 1] = miss;
                 a[x][y + 1] == miss;
             }
             if (y - 1 >= 0){
                 a[x + 1][y - 1] = miss;
-                a[x][y - 1] == miss;
+                a[x][y - 1] = miss;
             }
         }
         x = -1; y = -1; return;
@@ -200,21 +201,22 @@ void check(T a[], int& x, int& y) {
         return;
     }
     if (y1 + 1 <= 9) {
-        a[x][y1 + 1] == miss;
+        a[x][y1 + 1] = miss;
         if (x + 1 <= 9)
             a[x + 1][y1 + 1] = miss;
         if (x - 1 >= 0)
             a[x - 1][y1 + 1] = miss;
     }
     if (y2 - 1 >= 0) {
-        a[x][y2 - 1] == miss;
+        a[x][y2 - 1] = miss;
         if (x + 1 <= 9)
             a[x + 1][y2 - 1] = miss;
         if (y - 1 >= 0)
             a[x - 1][y2 - 1] = miss;
     }
-    for (int i = y2; i < y1; i++) {
+    for (int i = y2; i <= y1; i++) {
         a[x][i] = dead;
+        m++;
         if (x + 1 <= 9)
             a[x + 1][i] = miss;
         if (x - 1 >= 0)
@@ -224,7 +226,7 @@ void check(T a[], int& x, int& y) {
     return;
 }
 template <typename T>
-void AI(T a[]) {
+void AI(T a[], int& m) {
     static int i = -1, j = -1;
     int b, c;
     if (i >= 0 && j >= 0) {
@@ -235,7 +237,7 @@ void AI(T a[]) {
                 else if (a[i + 1][j] == ship) {
                     a[i + 1][j] = shot;
                     a[i][j] = hDown;
-                    check(a, i, j);
+                    check(a, i, j, m);
                     break;
                 }
                 else {
@@ -260,7 +262,7 @@ void AI(T a[]) {
                         a[x][y] = miss;
                     else {
                         a[x][y] = shot;
-                        check(a, i, j);
+                        check(a, i, j, m);
                     }
                     break;
                 }
@@ -285,7 +287,7 @@ void AI(T a[]) {
                             a[x][y] = miss;
                         else {
                             a[x][y] = shot;
-                            check(a, i, j);
+                            check(a, i, j, m);
                         }
                         break;
                     }
@@ -299,7 +301,7 @@ void AI(T a[]) {
                 else {
                     while (a[x][y] == shot) { x--; }
                     a[x][y] = shot;
-                    check(a, i, j);
+                    check(a, i, j, m);
                     break;
                 }
             }
@@ -307,7 +309,7 @@ void AI(T a[]) {
                 int x = i, y = j + 1;
                 while (a[x][y] == shot) { y++; }
                 a[x][y] = shot;
-                check(a, i, j);
+                check(a, i, j, m);
                 break;
             }
         }
@@ -322,7 +324,7 @@ void AI(T a[]) {
             a[b][c] = shot;
             i = b;
             j = c;
-            check(a, i, j);
+            check(a, i, j, m);
         }
     }
     //проверка на dead
@@ -331,21 +333,27 @@ template <typename T>
 void THEGAME(T f[], T f2[]) {
     int x = 0, y = 0, d, c;
     cout << " '-' -- пустота\n '=' -- ранил\n '%' -- убил\n '#'-мимо\n Приступай!\n";
+    print(f, f2);
+    cout << "Смотри какой живучий бот. Пальни по нему, зачем он такой.\n";
     do {
-        print(f, f2);
-        cout << "Смотри какой живучий бот. Пальни по нему, зачем он такой.\n";
-        cin >> d >> c;
-        if (f2[--d][--c] == empty)
+        cin >> d >> c; d--; c--;
+        if (f2[d][c] == empty)
             f2[d][c] = miss;
         else if (f2[d][c] == ship) {
             f2[d][c] = shot;
             x++;
-            check(f, d, c);
+            check(f2, d, c, x);
         }
         else
             cout << "мда.\n";
-        AI(f);
+        AI(f, y);
+        print(f, f2);
     } while (x < 20 || y < 20);
+    if (x == 20) {
+        cout << "Вы победили бота. Ну молодец ты";
+    }
+    else
+        cout << "Бот тебя уделал. Ужс, ничего другого от тебя не следовало ожидать.";
 }
 template <typename T>
 void fill(T a[], bool comp, T f[]) {
